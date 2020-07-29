@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Review Discourse Annotator</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="styles/index.css">
+    </head>
+
+<body class="blue">
+
+    <br />
+  <div class="container">
+
+    {% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="/qa_annotate/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+
+  </div>
+
+</body>
+
+
+</html>

@@ -1,32 +1,126 @@
-<html>
-    <head>
-        <title>Review Discourse Annotator</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="styles/index.css">
-    </head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'qa_annotate/style.css' %}">
+
 
 <body class="blue">
 
-    <br />
   <div class="container">
 
+  <div class="spacerBetween"> </div>
+    <h2> Parent comment </h2>
 
-    <h1>{{ question.question_text }}</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Chunk</th>
+        </tr>
+      </thead>
+      <tbody>
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+      {% parent_text %}
 
-<form action="{% url 'qa_annotate:vote' question.id %}" method="post">
-{% csrf_token %}
-{% for choice in question.choice_set.all %}
-    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
-{% endfor %}
-<input type="submit" value="Vote">
-</form>
 
+      </tbody>
+    </table>
+
+  <div class="form-group">
+  <div class="row">
+  <label class="col-md-2 control-label" for="Question_chunk">Question chunk index</label>  
+  <div class="col-md-2">
+  <input id="Question_chunk" name="Question_chunk" type="text" placeholder="" class="form-control input-md">
+    
+  </div>
+  <label class="col-md-2 control-label" for="textinput">Question text </label>  
+  <div class="col-md-3">
+  <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
+  <span class="help-block">Copy and paste the text that forms the question span.</span> 
+</div>
+<div class="row">
+  <label class="col-md-2 control-label" for="textinput">Question details</label>  
+  <div class="col-md-4">
+  <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
+  <span class="help-block">Detailed comments if necessary.</span> 
   </div>
 
+
+  <label class="col-md-4 control-label" for="qradios">Error categories</label>
+  <div class="col-md-4">
+  {% for option in q_options %}
+
+  <div class="radio">
+    <label for="qradios-{{ forloop.index }}">
+      <input type="radio" name="qradios" id="qradios-{{ forloop.index }}"
+                                         value="{{ forloop.index }}" checked="checked">
+      {{ option }}
+    </label>
+	</div>
+  {% endfor %}
+
+	</div>
+	</div>
+	</div>
+  <br />
+  <br />
+  <br />
+  <br />
+
+  <div class="spacerBetween"> </div>
+    <h2> Child comment </h2>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Chunk</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+
+<div class="form-group">
+  <div class="row">
+  <label class="col-md-2 control-label" for="Answer_chunk">Answer chunk index</label>  
+  <div class="col-md-2">
+  <input id="Answer_chunk" name="Answer_chunk" type="text" placeholder="" class="form-control input-md">
+    
+  </div>
+  <label class="col-md-2 control-label" for="textinput">Answer text </label>  
+  <div class="col-md-3">
+  <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
+  <span class="help-block">Copy and paste the text that forms the answer span.</span> 
+</div>
+<div class="row">
+  <label class="col-md-2 control-label" for="textinput">Answer details</label>  
+  <div class="col-md-4">
+  <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
+  <span class="help-block">Detailed comments if necessary.</span> 
+
+</div>
+
+
+
+
+  <label class="col-md-4 control-label" for="aradios">Error categories</label>
+  <div class="col-md-4">
+  {% for option in a_options %}
+
+  <div class="radio">
+    <label for="aradios-{{ forloop.index }}">
+      <input type="radio" name="aradios" id="aradios-{{ forloop.index }}"
+                                         value="{{ forloop.index }}" checked="checked">
+      {{ option }}
+    </label>
+	</div>
+  {% endfor %}
+
+	</div>
+
+    </div>
+
 </body>
-
-
-</html>

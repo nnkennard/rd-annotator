@@ -4,51 +4,69 @@ from django.template import loader
 from django.urls import reverse
 
 
-from .models import Choice, Question
+from .models import Example, Chunk
+
+Q_OPTIONS = ["No error", "Question spans multiple chunks",
+        "Multiple questions present", "Answer not expected",
+        "No question in vicinity", "Other (needs futher attention)"]
+
+A_OPTIONS = ["No error", "Answer spans multiple chunks", "Answer not present",
+        "Abstractive answer only", "Other (needs futher attention)"]
+
+def format_tokens(tokens, question):
+    dirty_text = " ".join(tokens)
+    if question is not None:
+        subs = dirty_text.find(question)
+        if subs > -1:
+            frags = dirty_text[:subs], dirty_text[subs:subs +
+                    len(question)], dirty_text[subs+len(question):]
+            dirty_text = frags[0] + "****" + frags[1] + "****" + frags[2]
+
+    clean_text = dirty_text.replace("COM", ",").replace(
+            "-LRB-", "(").replace(
+            "-RRB-", ")").replace(
+            "-LSB-", "[").replace(
+            "-RSB-", "]")
+    return clean_text
+
+def dedup_chunks(chunks):
+    seen_chunks = []
+    seen_tokens = []
+    for chunk in chunks:
+        if chunk.chunk_tokens not in seen_tokens:
+            seen_chunks.append(chunk)
+            seen_tokens.append(chunk.chunk_tokens)
+    return seen_chunks
+
+def get_chunk_texts(comment_id, hl_idx, question=None):
+    chunks = Chunk.objects.filter(comment_id=comment_id)
+    text_chunks = format_tokens(chunks, question)
+    text = "\n\n".join(dedup_chunks(text_chunks))
+    return text 
 
 
-def detail(request, question_id):
+def detail(request, example_id):
     try:
-        question = Question.objects.get(pk=question_id)
-    except Question.DoesNotExist:
-        raise Http404("Question does not exist")
-    return render(request, 'qa_annotate/detail.html', {'question': question})
+        example = Example.objects.get(pk=example_id)
+        parent_chunks = get_chunk_texts(example.parent_comment_id,
+                example.parent_chunk_idx, example.maybe_question_text)
+        child_chunks = get_chunk_texts(example.child_comment_id,
+                example.child_chunk_idx)
+    except Example.DoesNotExist:
+        raise Http404("Example does not exist")
+    return render(request, 'qa_annotate/detail.html', {'example': example,
+        'parent_text': parent_text, 'child_text':child_text,
+        "q_options":Q_OPTIONS, "a_options":A_OPTIONS})
     #return HttpResponse("You're looking at question %s." % question_id)
 
 def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'qa_annotate/results.html', {'question': question})
-
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(request, 'qa_annotate/detail.html', {
-            'question': question,
-            'error_message': "You didn't select a choice.",
-        })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('qa_annotate:results', args=(question.id,)))
-
+    example = get_object_or_404(Example, pk=example_id)
+    return render(request, 'qa_annotate/results.html', {'example': example})
 
 def index(request):
-    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    example_list = Example.objects.all()
     template = loader.get_template('qa_annotate/index.html')
     context = {
-        'latest_question_list': latest_question_list,
+        'example_list': example_list,
     }
     return HttpResponse(template.render(context, request))
-    #latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    #output = "Hello hello " + ', '.join([q.question_text for q in latest_question_list])
-    #return HttpResponse(output)
-    #return HttpResponse("Hello, world. You're at the polls index.")
-
-
-# Create your views here.

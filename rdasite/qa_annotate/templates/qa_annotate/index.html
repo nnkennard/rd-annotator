@@ -10,10 +10,10 @@
     <br />
   <div class="container">
 
-    {% if latest_question_list %}
+    {% if example_list %}
     <ul>
-    {% for question in latest_question_list %}
-        <li><a href="/qa_annotate/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% for example in example_list %}
+        <li><a href="/qa_annotate/{{ example.id }}/"> {{ example.parent_comment_id }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

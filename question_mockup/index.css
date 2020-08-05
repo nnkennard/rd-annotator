@@ -1,0 +1,17 @@
+.greybody {
+  background-color: #7d7d7d;
+}
+
+ .card-body{
+     width: 95% !important;
+     height: 95% !important;
+     margin: 0 auto;
+ }
+
+div {
+  background-color: #ffffff;
+}
+
+.spacerBetween {
+  height: 35px;
+}

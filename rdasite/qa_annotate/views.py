@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template import loader
@@ -27,7 +29,8 @@ def format_tokens(tokens, question):
             "-RRB-", ")").replace(
             "-LSB-", "[").replace(
             "-RSB-", "]")
-    return clean_text
+    return dirty_text.split()
+
 
 def dedup_chunks(chunks):
     seen_chunks = []
@@ -40,24 +43,23 @@ def dedup_chunks(chunks):
 
 def get_chunk_texts(comment_id, hl_idx, question=None):
     chunks = Chunk.objects.filter(comment_id=comment_id)
-    text_chunks = format_tokens(chunks, question)
-    text = "\n\n".join(dedup_chunks(text_chunks))
-    return text 
+    deduped_chunks = dedup_chunks(chunks)
+    return [format_tokens(chunk.chunk_tokens, question)
+            for chunk in deduped_chunks]
 
 
 def detail(request, example_id):
     try:
         example = Example.objects.get(pk=example_id)
-        parent_chunks = get_chunk_texts(example.parent_comment_id,
+        parent_text = get_chunk_texts(example.parent_comment_id,
                 example.parent_chunk_idx, example.maybe_question_text)
-        child_chunks = get_chunk_texts(example.child_comment_id,
+        child_text = get_chunk_texts(example.child_comment_id,
                 example.child_chunk_idx)
     except Example.DoesNotExist:
         raise Http404("Example does not exist")
     return render(request, 'qa_annotate/detail.html', {'example': example,
-        'parent_text': parent_text, 'child_text':child_text,
+       'parent_chunks': json.dumps(parent_text), 'child_text':child_text,
         "q_options":Q_OPTIONS, "a_options":A_OPTIONS})
-    #return HttpResponse("You're looking at question %s." % question_id)
 
 def results(request, question_id):
     example = get_object_or_404(Example, pk=example_id)

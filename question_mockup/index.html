@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
 
-<!--link rel="stylesheet" type="text/css" href="{% static 'qa_annotate/style.css' %}"-->
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'qa_annotate/style.css' %}">
 
 <body class="greybody" onload="constructPage()">
 
@@ -13,6 +15,10 @@
           <div class="card-header">
             Parent comment text </div>
           <div class="card-body" id="textCard">
+              {% for chunk in parent_chunks %}
+              {{ chunk }}
+              <br/> <br/>
+              {% endfor %}
           </div>
         </div>
       </div>

@@ -3,124 +3,86 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'qa_annotate/style.css' %}">
+<script src="{% static 'qa_annotate/index.js' %}"></script>
 
 
-<body class="blue">
+{% load js %}
+
+<script type="text/javascript">
+    var TOKENS = {{ parent_chunks | js }};
+</script>
+
+<body class="greybody" onload="constructPage(TOKENS)">
 
   <div class="container">
 
-  <div class="spacerBetween"> </div>
-    <h2> Parent comment </h2>
+    <div class="spacerBetween"> </div>
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <div class="card" onmouseup="consumeSelection()">
+          <div class="card-header">
+            Parent comment text </div>
+          <div class="card-body" id="textCard">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spacerBetween"> </div>
+    <div class="row">
+      <div class="col-xs-5 col-xs-offset-1">
+        <div class="card-header">
+          Currently selected span </div>
+        <div class="card">
+          <div class="card-body" id="highlightedCard">
+            <p id="highlightedCardSpan">
+              <br />
 
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Chunk</th>
-        </tr>
-      </thead>
-      <tbody>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-3">
 
-      {% parent_text %}
-
-
-      </tbody>
-    </table>
-
-  <div class="form-group">
-  <div class="row">
-  <label class="col-md-2 control-label" for="Question_chunk">Question chunk index</label>  
-  <div class="col-md-2">
-  <input id="Question_chunk" name="Question_chunk" type="text" placeholder="" class="form-control input-md">
-    
-  </div>
-  <label class="col-md-2 control-label" for="textinput">Question text </label>  
-  <div class="col-md-3">
-  <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-  <span class="help-block">Copy and paste the text that forms the question span.</span> 
-</div>
-<div class="row">
-  <label class="col-md-2 control-label" for="textinput">Question details</label>  
-  <div class="col-md-4">
-  <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-  <span class="help-block">Detailed comments if necessary.</span> 
-  </div>
-
-
-  <label class="col-md-4 control-label" for="qradios">Error categories</label>
-  <div class="col-md-4">
-  {% for option in q_options %}
-
-  <div class="radio">
-    <label for="qradios-{{ forloop.index }}">
-      <input type="radio" name="qradios" id="qradios-{{ forloop.index }}"
-                                         value="{{ forloop.index }}" checked="checked">
-      {{ option }}
-    </label>
-	</div>
-  {% endfor %}
-
-	</div>
-	</div>
-	</div>
-  <br />
-  <br />
-  <br />
-  <br />
-
-  <div class="spacerBetween"> </div>
-    <h2> Child comment </h2>
-
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Chunk</th>
-        </tr>
-      </thead>
-      <tbody>
-
-      </tbody>
-    </table>
-
-<div class="form-group">
-  <div class="row">
-  <label class="col-md-2 control-label" for="Answer_chunk">Answer chunk index</label>  
-  <div class="col-md-2">
-  <input id="Answer_chunk" name="Answer_chunk" type="text" placeholder="" class="form-control input-md">
-    
-  </div>
-  <label class="col-md-2 control-label" for="textinput">Answer text </label>  
-  <div class="col-md-3">
-  <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-  <span class="help-block">Copy and paste the text that forms the answer span.</span> 
-</div>
-<div class="row">
-  <label class="col-md-2 control-label" for="textinput">Answer details</label>  
-  <div class="col-md-4">
-  <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-  <span class="help-block">Detailed comments if necessary.</span> 
-
-</div>
-
-
-
-
-  <label class="col-md-4 control-label" for="aradios">Error categories</label>
-  <div class="col-md-4">
-  {% for option in a_options %}
-
-  <div class="radio">
-    <label for="aradios-{{ forloop.index }}">
-      <input type="radio" name="aradios" id="aradios-{{ forloop.index }}"
-                                         value="{{ forloop.index }}" checked="checked">
-      {{ option }}
-    </label>
-	</div>
-  {% endfor %}
-
-	</div>
-
+        <label for="questionNotes">Notes </label> <input id="questionNotes" name="questionNotes" type="text" class="form-control input-md">
+        <small for="questionNotes" id="questionNotesHelp" class="form-text text-muted">Notes pertaining to this question</small>
+      </div>
+      <div class="col-xs-2">
+        <br />
+        <button type="button" class="btn btn-success" id="confirmQuestionButton" onClick="confirmQuestion()">Confirm question</button>
+      </div>
     </div>
 
-</body>
+    <div class="spacerBetween"> </div>
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <div class="card">
+          <div class="card-header">
+            Confirmed questions </div>
+          <div class="card-body">
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col"> </th>
+                  <th scope="col">Question</th>
+                  <th scope="col">Notes</th>
+                </tr>
+              </thead>
+              <tbody id="questionsTable">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="spacerBetween"> </div>
+    <div class="row">
+      <div class="col-xs-1 col-xs-offset-10">
+        <button type="button" class="btn btn-success" id="doneButton" onClick="done()">Done</button>
+      </div>
+    </div>
+    <div class="spacerBetween"> </div>
+  </div>
+  </div>
+<

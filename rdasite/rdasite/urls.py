@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('qa_annotate/', include('qa_annotate.urls')),
+    path('annotate/', include('annotate.urls')),
     path('admin/', admin.site.urls),
 ]
 

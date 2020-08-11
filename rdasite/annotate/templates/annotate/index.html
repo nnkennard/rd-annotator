@@ -1,0 +1,10 @@
+
+{% if supernode_list %}
+    <ul>
+    {% for node in supernode_list %}
+        <li><a href="/annotate/{{ node.comment_id }}/">{{ node.comment_id }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}

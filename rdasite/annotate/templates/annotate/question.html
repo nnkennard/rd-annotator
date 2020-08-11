@@ -1,0 +1,85 @@
+<head><title> Question Annotation </title></head>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static '/annotate/index.css' %}">
+<script src="{% static '/annotate/index.js' %}"></script>   
+
+<body class="greybody" onload="constructPage()">
+
+  <div class="container">
+
+    {{ tokens|json_script:"tokens" }}
+
+    <div class="spacerBetween"> </div>
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <div class="card" onmouseup="consumeSelection()">
+          <div class="card-header">
+            Parent comment text </div>
+          <div class="card-body" id="textCard">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spacerBetween"> </div>
+    <div class="row">
+      <div class="col-xs-5 col-xs-offset-1">
+        <div class="card-header">
+          Currently selected span </div>
+        <div class="card">
+          <div class="card-body" id="highlightedCard">
+            <p id="highlightedCardSpan">
+              <br />
+
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-3">
+
+        <label for="questionNotes">Notes </label> <input id="questionNotes" name="questionNotes" type="text" class="form-control input-md">
+        <small for="questionNotes" id="questionNotesHelp" class="form-text text-muted">Notes pertaining to this question</small>
+      </div>
+      <div class="col-xs-2">
+        <br />
+        <button type="button" class="btn btn-success" id="confirmQuestionButton" onClick="confirmQuestion()">Confirm question</button>
+      </div>
+    </div>
+
+    <div class="spacerBetween"> </div>
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <div class="card">
+          <div class="card-header">
+            Confirmed questions </div>
+          <div class="card-body">
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col"> </th>
+                  <th scope="col">Question</th>
+                  <th scope="col">Notes</th>
+                </tr>
+              </thead>
+              <tbody id="questionsTable">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="spacerBetween"> </div>
+    <div class="row">
+      <div class="col-xs-1 col-xs-offset-10">
+        <button type="button" class="btn btn-success" id="doneButton" onClick="done()">Done</button>
+      </div>
+    </div>
+    <div class="spacerBetween"> </div>
+  </div>
+  </div>
+</body>

@@ -32,7 +32,9 @@ ALLOWED_HOSTS = ["64847a3d9fa2.ngrok.io", 'localhost', "80125e35626f.ngrok.io",
 # Application definition
 
 INSTALLED_APPS = [
-    'annotate.apps.AnnotateConfig',
+    #'annotate_alignment.apps.AnnotateAlignmentConfig',
+    #'annotate.apps.AnnotateConfig',
+    'alignments.apps.AlignmentsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

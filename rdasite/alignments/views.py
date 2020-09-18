@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import loader
 
-from .models import AlignmentAnnotation, AnnotatedPair
+from .models import AlignmentAnnotation, AnnotatedPair, Text
 
 def index(request):
     pair_list = AnnotatedPair.objects.all()
@@ -12,15 +12,30 @@ def index(request):
 
 
 def crunch_supernote(supernote):
-    rows = Text.objects.get(comment_supernote=supernote)
+    rows = Text.objects.filter(comment_supernote=supernote)
+    chunks = []
+    current_chunk = []
+    current_chunk_idx = 0
+    for row in rows:
+        if current_chunk_idx == row.chunk_idx:
+            current_chunk.append(row.token)
+        else:
+            if current_chunk:
+                chunks.append(current_chunk)
+            current_chunk = [row.token]
+            current_chunk_idx = row.chunk_idx
 
-def detail(request, review, rebuttal):
-    review_text = crunch_supernote(review)
-    rebuttal_text = crunch_supernote(rebuttal)
+    return [" ".join(chunk_tokens) for chunk_tokens in chunks]
 
-    context = {"review": supernode.tokens,
-            "rebuttal": relevant_questions}
-    template = loader.get_template('alignments/pair.html')
+        
+
+def detail(request, review_supernote, rebuttal_supernote):
+    review_text = crunch_supernote(review_supernote)
+    rebuttal_text = crunch_supernote(rebuttal_supernote)[0]
+
+    context = {"review": review_text,
+            "rebuttal": rebuttal_text}
+    template = loader.get_template('alignments/detail.html')
     return HttpResponse(template.render(context, request))
 
 #

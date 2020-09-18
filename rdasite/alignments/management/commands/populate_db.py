@@ -28,6 +28,9 @@ class Command(BaseCommand):
         #            )
         #    textnode.save()
 
+        AnnotatedPair.objects.all().delete()
+        AlignmentAnnotation.objects.all().delete()
+
         for node in json_obj["metadata"][:10]:
             rebuttal_chunk_maps = Text.objects.values(
                 "chunk_idx").filter(
@@ -39,7 +42,20 @@ class Command(BaseCommand):
                         review_supernote = node["parent_supernote"],
                         rebuttal_supernote = node["comment_supernote"],
                         rebuttal_chunk = i,
-                        label = None,
-                        comment = None
+                        label = "",
+                        comment = ""
                         )
+                annotation.save()
+            print(node.keys())
+            annotated_pair = AnnotatedPair(
+                review_supernote = node["parent_supernote"],
+                rebuttal_supernote = node["comment_supernote"],
+                annotator="", 
+                status=Statuses.UNANNOTATED,
+                title=node["title"],
+                reviewer=node["parent_author"]
+                    )
+            annotated_pair.save()
+            
+
         

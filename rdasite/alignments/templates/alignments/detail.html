@@ -1,0 +1,84 @@
+<head><title> Alignment Annotation </title></head>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static '/annotate/index.css' %}">
+<script src="{% static '/annotate/index.js' %}"></script>   
+
+<body>
+
+<div class="container-fluid">
+  <br />
+  <br />
+  <div class="row">
+    <div class="col-xs-4 col-xs-offset-1">
+      <h2>Rebuttal</h2>
+      Select which chunk(s) of the review this text is responding to. <br /><br />
+
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>{{ rebuttal }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <br />
+
+      <button id="singlebutton" name="singlebutton" class="btn btn-primary">Show full rebuttal</button>
+      <br />
+      <br />
+
+      Your initials
+      <div class="col-md-6">
+        <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
+      </div> <br />
+
+      Comments
+      <div class="col-md-12">
+        <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
+      </div> <br />
+
+      <button id="submit" name="submit" class="btn btn-success">Submit</button>
+
+    </div>
+    <div class="col-xs-5 col-xs-offset-1">
+      <h2>Review</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Responds to review chunk #...</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+
+        {% for review_chunk in review%}
+          <tr>
+            <th scope="row">{{ forloop.counter0 }}</th>
+            <td> {{ review_chunk }} </td>
+            <td>
+              <label class="radio-inline" for="radios-{{ forloop.counter0 }}">
+                <input type="radio" name="radios" id="radios-{{ forloop.counter0 }}-1" value="1">
+                Yes
+              </label> <br />
+              <label class="radio-inline" for="radios-{{ forloop.counter0 }}">
+                <input type="radio" name="radios" id="radios-{{ forloop.counter0 }}-0" value="0" checked="checked">
+                No
+              </label>
+            </td>
+          </tr>
+
+        {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>

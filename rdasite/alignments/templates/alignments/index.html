@@ -2,7 +2,10 @@
 {% if pair_list %}
     <ul>
     {% for pair in pair_list %}
-    <li><a href="/annotate_alignment/{{ pair.review }}_{{ pair.rebuttal }}">{{ pair.title }}</a></li>
+    <li>
+        {{ pair.reviewer }} | 
+      <a href="/alignments/{{ pair.review_supernote }}_{{ pair.rebuttal_supernote }}">
+{{ pair.title }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

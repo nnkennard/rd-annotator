@@ -2,8 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-#{'forum_id': 'ryl8-3AcFX', 'split': 'train', 'parent_supernote': 'SkluH4n6nX', 'comment_supernote': 'SklMCmJ-aX', 'parent_author': 'AnonReviewer1', 'title': 'Environment Probing Interaction Policies'}
-
 class AlignmentAnnotation(models.Model):
     class Meta:
         app_label = "alignments"
@@ -20,6 +18,8 @@ class AnnotatedPair(models.Model):
     rebuttal_supernote = models.CharField(max_length=30)
     annotator = models.CharField(max_length=30)
     status = models.IntegerField()
+    title = models.CharField(max_length=300)
+    reviewer = models.CharField(max_length=30)
 
 class Text(models.Model):
     class Meta:
@@ -30,3 +30,11 @@ class Text(models.Model):
     token_idx = models.IntegerField()
     token = models.CharField(max_length=30)
     
+
+class Statuses(models.Model):
+    class Meta:
+        app_label = "alignments"
+    UNANNOTATED = 0
+    PARTIALLY_ANNOTATED = 1
+    COMPLETE = 2
+    ERROR = 3

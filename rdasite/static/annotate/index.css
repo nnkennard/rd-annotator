@@ -18,3 +18,9 @@ div {
 .spacerBetween {
   height: 35px;
 }
+
+/* Hide all steps by default: */
+.tab {
+  display: none;
+}
+

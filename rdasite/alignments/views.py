@@ -31,9 +31,13 @@ def crunch_supernote(supernote):
 
 def detail(request, review_supernote, rebuttal_supernote):
     review_text = crunch_supernote(review_supernote)
-    rebuttal_text = crunch_supernote(rebuttal_supernote)[0]
-
-    context = {"review": review_text,
+    rebuttal_text = crunch_supernote(rebuttal_supernote)
+    title = AnnotatedPair.objects.get(
+            review_supernote=review_supernote,
+            rebuttal_supernote=rebuttal_supernote
+            ).title
+    context = {"paper_title":title,
+            "review": review_text,
             "rebuttal": rebuttal_text}
     template = loader.get_template('alignments/detail.html')
     return HttpResponse(template.render(context, request))

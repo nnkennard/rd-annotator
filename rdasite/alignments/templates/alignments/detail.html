@@ -1,50 +1,79 @@
 <head><title> Alignment Annotation </title></head>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css
+">
 
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static '/annotate/index.css' %}">
 <script src="{% static '/annotate/index.js' %}"></script>   
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.4/umd/popper.min.js'></script>
 
 <body>
 
 <div class="container-fluid">
   <br />
   <br />
+      <h1> {{ paper_title }} </h1>
+      <br />
+      <br />
   <div class="row">
-    <div class="col-xs-4 col-xs-offset-1">
+    <div class="col-4 offset-1">
       <h2>Rebuttal</h2>
-      Select which chunk(s) of the review this text is responding to. <br /><br />
+      Select which chunk(s) of the review the following chunk of text is responding to. <br /><br />
+
+      
+      <button id="singlebutton" name="singlebutton" class="btn btn-secondary"
+                                                    data-toggle="modal"
+                                                    data-target="#myModal"> &lt; </button>
+
+      &nbsp; Chunk 0 / {{ rebuttal | length }} &nbsp; 
+
+
+      <button id="singlebutton" name="singlebutton" class="btn btn-secondary"
+                                                    data-toggle="modal"
+                                                    data-target="#myModal"> &gt; </button>
+      <br />
+
+      {% for rebuttal_chunk in rebuttal %}
+
+      <div class="tab">
 
       <table class="table">
         <tbody>
           <tr>
-            <td>{{ rebuttal }}</td>
+            <td>{{ rebuttal_chunk }}</td>
           </tr>
         </tbody>
       </table>
 
+      </div>
+
+      {% endfor %}
+
       <br />
 
-      <button id="singlebutton" name="singlebutton" class="btn btn-primary">Show full rebuttal</button>
+
+      <button id="singlebutton" name="singlebutton" class="btn btn-primary"  data-toggle="modal" data-target="#myModal">Show full rebuttal</button>
       <br />
       <br />
 
-      Your initials
+      Your initials <br />
       <div class="col-md-6">
         <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-      </div> <br />
+      </div> <br /> <br />
 
-      Comments
+      Comments <br />
       <div class="col-md-12">
         <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-      </div> <br />
+      </div> <br /> <br /> <br />
 
       <button id="submit" name="submit" class="btn btn-success">Submit</button>
 
     </div>
-    <div class="col-xs-5 col-xs-offset-1">
+    <div class="col-5 offset-1">
       <h2>Review</h2>
       <table class="table">
         <thead>
@@ -62,11 +91,11 @@
             <td> {{ review_chunk }} </td>
             <td>
               <label class="radio-inline" for="radios-{{ forloop.counter0 }}">
-                <input type="radio" name="radios" id="radios-{{ forloop.counter0 }}-1" value="1">
+                <input type="radio" name="radios{{ forloop.counter0 }}" id="radios-{{ forloop.counter0 }}-1" value="1">
                 Yes
               </label> <br />
               <label class="radio-inline" for="radios-{{ forloop.counter0 }}">
-                <input type="radio" name="radios" id="radios-{{ forloop.counter0 }}-0" value="0" checked="checked">
+                <input type="radio" name="radios{{ forloop.counter0 }}" id="radios-{{ forloop.counter0 }}-0" value="0" checked="checked">
                 No
               </label>
             </td>
@@ -80,5 +109,26 @@
   </div>
 </div>
 </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Full rebuttal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% for rebuttal_chunk in rebuttal %}
+        {{ rebuttal_chunk }} <br /> <br />
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 </body>

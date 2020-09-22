@@ -24,6 +24,8 @@ def crunch_supernote(supernote):
                 chunks.append(current_chunk)
             current_chunk = [row.token]
             current_chunk_idx = row.chunk_idx
+    if current_chunk:
+        chunks.append(current_chunk)
 
     return [" ".join(chunk_tokens) for chunk_tokens in chunks]
 
@@ -42,4 +44,8 @@ def detail(request, review_supernote, rebuttal_supernote):
     template = loader.get_template('alignments/detail.html')
     return HttpResponse(template.render(context, request))
 
-#
+def submitted(request):
+    template = loader.get_template('alignments/submitted.html')
+    #print(request.POST.keys())
+    context = {}
+    return HttpResponse(template.render(context, request))

@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+app_name = "alignments"
+
 urlpatterns = [
-    path('alignments/', include('alignments.urls')),
+    path('alignments/',
+        include(
+        'alignments.urls'),),
     #path('annotate_alignment/', include('annotate_alignment.urls')),
     #path('annotate/', include('annotate.urls')),
     path('admin/', admin.site.urls),

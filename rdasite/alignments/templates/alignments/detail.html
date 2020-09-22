@@ -13,30 +13,32 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.4/umd/popper.min.js'></script>
 <body onload="hello({{ review | length }}, {{ rebuttal | length }})">
    <div class="row">
-      <div class="col-md-8 offset-2"> <br /> <h1> {{ paper_title }} </h1> </div>
+      <div class="col-md-8 offset-2">
+         <br /> 
+         <h1> {{ paper_title }} </h1>
+      </div>
    </div>
-      <br />
-      <br />
+   <br />
+   <br />
    <div class="row">
       <div class="col-4 offset-1">
          Your initials
          <input id="initials" type="text" class="form-control input-md">
          Comments
          <input id="comments" type="text" class="form-control input-md"><br />
-         Buttons buttons buttons
       </div>
       <div class="col-2">
          <button id="singlebutton" name="singlebutton" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Show full rebuttal</button> <br /> <br />
-         <button id="generate" name="generate" class="btn btn-primary" onclick="generateJson({{ review | length }}, {{ rebuttal | length }})">Check Judgments</button> 
-        
+         <button id="generate" name="generate" class="btn btn-primary" onclick="generateJson({{ review | length }}, {{ rebuttal | length }})">Finalize Judgments</button> 
       </div>
       <div class="col-4">
-         <textarea id="jsonBox" class="form-control">Judgments will appear here when complete</textarea> <br />
-         <button id="submitBtn" name="submit" class="btn btn-primary" onclick="doSubmit()" disabled>Submit</button>
+         <form action="/alignments/submitted/" method="post">
+            {% csrf_token %}
+            <textarea id="jsonBox" class="form-control">Judgments will appear here when complete</textarea> <br />
+            <button id="submitBtn" type="submit" class="btn btn-primary" onclick="doSubmit()" disabled>Submit</button>
+         </form>
       </div>
-
-      </div>
-
+   </div>
    {% for rebuttal_chunk in rebuttal %}
    <div class="tab">
       <div class="container-fluid">
@@ -54,14 +56,14 @@
                   <tbody>
                      {% for review_chunk in review %}
                      {% with forloop.parentloop.counter0|addstr:"-"|addstr:forloop.counter0 as chunk_id %}
-                     <tr id="reviewrow_{{ chunk_id }}">
+                     <tr id="reviewrow_{{ chunk_id }}" class="table-secondary">
                         <th scope="row">{{ forloop.counter0 }}</th>
                         <td> {{ review_chunk }} </td>
                         <td>
                            <input type="radio" id="radios-{{ chunk_id }}-Yes" name="radios-{{ chunk_id }}"
-                              onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 1)" value="Yes"> Yes
+                              onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 1)" value="Yes" checked="false"> Yes
                            <input type="radio" id="radios-{{ chunk_id }}-No" name="radios-{{ chunk_id }}"
-                              onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 0);" value="No"> No
+                              onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 0);" value="No" checked="true"> No
                         </td>
                      </tr>
                      {% endwith %}
@@ -84,6 +86,17 @@
                   </tbody>
                </table>
                <br />
+               Chunking error in <b>this rebuttal chunk</b>?
+                  <input type="radio" id="rebuttalradios-{{ forloop.counter0 }}-Yes" name="rebuttalradios-{{ forloop.counter0 }}"
+                  onclick="updateError({{ forloop.counter0 }}, 0, 0)" value="Yes"> Yes
+                  <input type="radio" id="rebuttalradios-{{ forloop.counter0 }}-No" name="rebuttalradios-{{ forloop.counter0 }}"
+                  onclick="updateError({{ forloop.counter0 }}, 0, 1)"  value="No" checked="true"> No <br />
+               Chunking error in <b>relevant review chunks</b>?
+                  <input type="radio" id="reviewradios-{{ forloop.counter0 }}-Yes" name="reviewradios-{{ forloop.counter0 }}"
+                  onclick="registerError({{ forloop.counter0 }}, 1, 0)" value="Yes"> Yes
+                  <input type="radio" id="reviewradios-{{ forloop.counter0 }}-No" name="reviewradios-{{ forloop.counter0 }}"
+                  onclick="registerError({{ forloop.counter0 }}, 1, 1)" 
+                  value="No" checked="true"> No <br />
                <br /> <br />
             </div>
          </div>

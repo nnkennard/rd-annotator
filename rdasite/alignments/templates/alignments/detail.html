@@ -11,15 +11,35 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.4/umd/popper.min.js'></script>
-<body onload="switchTab(-1, 1, 1)">
+<body onload="hello({{ review | length }}, {{ rebuttal | length }})">
+   <div class="row">
+      <div class="col-md-8 offset-2"> <br /> <h1> {{ paper_title }} </h1> </div>
+   </div>
+      <br />
+      <br />
+   <div class="row">
+      <div class="col-4 offset-1">
+         Your initials
+         <input id="initials" type="text" class="form-control input-md">
+         Comments
+         <input id="comments" type="text" class="form-control input-md"><br />
+         Buttons buttons buttons
+      </div>
+      <div class="col-2">
+         <button id="singlebutton" name="singlebutton" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Show full rebuttal</button> <br /> <br />
+         <button id="generate" name="generate" class="btn btn-primary" onclick="generateJson({{ review | length }}, {{ rebuttal | length }})">Check Judgments</button> 
+        
+      </div>
+      <div class="col-4">
+         <textarea id="jsonBox" class="form-control">Judgments will appear here when complete</textarea> <br />
+         <button id="submitBtn" name="submit" class="btn btn-primary" onclick="doSubmit()" disabled>Submit</button>
+      </div>
+
+      </div>
+
    {% for rebuttal_chunk in rebuttal %}
    <div class="tab">
       <div class="container-fluid">
-         <br />
-         <br />
-         <h1> {{ paper_title }} </h1>
-         <br />
-         <br />
          <div class="row">
             <div class="col-5 offset-1">
                <h2>Review</h2>
@@ -33,18 +53,18 @@
                   </thead>
                   <tbody>
                      {% for review_chunk in review %}
-                        {% with forloop.parentloop.counter0|addstr:"-"|addstr:forloop.counter0 as chunk_id %}
-                           <tr id="reviewrow_{{ chunk_id }}">
-                              <th scope="row">{{ forloop.counter0 }}</th>
-                              <td> {{ review_chunk }} </td>
-                              <td>
-                                 <input type="radio" id="radios-{{ chunk_id }}-Yes" name="radios-{{ chunk_id }}"
-                                    onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 1)" value="Yes"> Yes
-                                 <input type="radio" id="radios-{{ chunk_id }}-No" name="radios-{{ chunk_id }}"
-                                    onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 0);" value="No"> No
-                              </td>
-                           </tr>
-                        {% endwith %}
+                     {% with forloop.parentloop.counter0|addstr:"-"|addstr:forloop.counter0 as chunk_id %}
+                     <tr id="reviewrow_{{ chunk_id }}">
+                        <th scope="row">{{ forloop.counter0 }}</th>
+                        <td> {{ review_chunk }} </td>
+                        <td>
+                           <input type="radio" id="radios-{{ chunk_id }}-Yes" name="radios-{{ chunk_id }}"
+                              onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 1)" value="Yes"> Yes
+                           <input type="radio" id="radios-{{ chunk_id }}-No" name="radios-{{ chunk_id }}"
+                              onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 0);" value="No"> No
+                        </td>
+                     </tr>
+                     {% endwith %}
                      {% endfor %}
                   </tbody>
                </table>
@@ -64,27 +84,7 @@
                   </tbody>
                </table>
                <br />
-               <button id="singlebutton" name="singlebutton" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Show full rebuttal</button>
-               <br />
-               <br />
-               Your initials <br />
-               <div class="col-md-6">
-                  <input id="initials" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-               </div>
                <br /> <br />
-               Comments <br />
-               <div class="col-md-12">
-                  <input id="comments" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-               </div>
-               <br /> <br /> <br />
-               <button id="generate" name="geberate" class="btn btn-success" onclick="generateJson()">Finalize Alignments</button>
-
-               Alignment json will populate here when ready:
-               <div class="col-md-12">
-                  <input id="jsonbox" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
-               </div>
-               <button id="submit" name="submit" class="btn btn-success">Submit</button>
-               <br /> <br /> <br />
             </div>
          </div>
       </div>
@@ -113,5 +113,4 @@
    </div>
    <script src="{% static '/index.js' %}"></script>
 </body>
-
 

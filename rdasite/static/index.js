@@ -22,6 +22,19 @@ function switchTab(current_tab, total_tabs, direction) {
         tabs.item(current_tab).style.display = "none";
     }
     tabs.item(new_tab).style.display = "block";
+    paint(new_tab)
+}
+
+function paint(current_tab){
+    var num_review_chunks = document.getElementById("reviewtablebody_"+current_tab).childElementCount
+    for (var i of Array(num_review_chunks).keys()){
+        chunk_id = current_tab + "-" + i
+        if (document.getElementById("radios-"+ chunk_id + "-Yes").checked){
+            document.getElementById("reviewrow_"+chunk_id).className = "table-success"
+        } else {
+            document.getElementById("reviewrow_"+chunk_id).className = "table-secondary"
+        }
+    }
 }
 
 function handleClick(rebuttal_idx, review_idx, value) {
@@ -67,6 +80,11 @@ function updateError(rebuttal_chunk, rebuttal_or_review, add_or_remove) {
     }
     document.getElementById("submitBtn").disabled = "true";
 }
+
+function cleanAnnotations(){
+  
+}
+
 
 function generateJson(review_length, rebuttal_length) {
 

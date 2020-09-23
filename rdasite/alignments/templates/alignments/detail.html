@@ -1,5 +1,3 @@
-
-
 <head>
    <title> Alignment Annotation </title>
 </head>
@@ -55,7 +53,7 @@
          <div class="row">
             <div class="col-5 offset-1">
                <h2>Review</h2>
-               <table class="table">
+               <table class="table" >
                   <thead>
                      <tr>
                         <th scope="col">#</th>
@@ -63,7 +61,7 @@
                         <th scope="col"></th>
                      </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="reviewtablebody_{{forloop.counter0}}">
                      {% for review_chunk in review %}
                      {% with forloop.parentloop.counter0|addstr:"-"|addstr:forloop.counter0 as chunk_id %}
                      <tr id="reviewrow_{{ chunk_id }}" class="table-secondary">

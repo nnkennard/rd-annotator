@@ -74,9 +74,9 @@
 
                         <td>
                            <input type="radio" id="radios-{{ chunk_id }}-Yes" name="radios-{{ chunk_id }}"
-                              onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 1)" value="Yes" checked="false"> Yes
+                              onclick="handleClick({{ forloop.parentloop.counter0 }})" value="Yes" checked="false"> Yes
                            <input type="radio" id="radios-{{ chunk_id }}-No" name="radios-{{ chunk_id }}"
-                              onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 0);" value="No" checked="true"> No
+                              onclick="handleClick({{ forloop.parentloop.counter0 }})" value="No" checked="true"> No
                         </td>
                      </tr>
                      {% endwith %}

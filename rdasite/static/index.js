@@ -1,19 +1,10 @@
 switchTab(-1, 1, 1); // Display the first tab
 document.getElementById("submitBtn").disabled = "true";
-window.annotation_map = {}
 window.error_map = {
     "review_errors": Array(),
     "rebuttal_errors": Array()
 }
 
-function hello(review_length, rebuttal_length) {
-    for (const rebuttal_idx of Array(rebuttal_length).keys()) {
-        window.annotation_map[rebuttal_idx] = {}
-        for (const review_idx of Array(review_length).keys()) {
-            window.annotation_map[rebuttal_idx][review_idx] = null;
-        }
-    }
-}
 
 function switchTab(current_tab, total_tabs, direction) {
     new_tab = (current_tab + direction + total_tabs) % total_tabs;
@@ -24,6 +15,7 @@ function switchTab(current_tab, total_tabs, direction) {
     tabs.item(new_tab).style.display = "block";
     paint(new_tab)
 }
+
 
 function paint(current_tab){
     var num_review_chunks = document.getElementById("reviewtablebody_"+current_tab).childElementCount
@@ -37,29 +29,17 @@ function paint(current_tab){
     }
 }
 
-function handleClick(rebuttal_idx, review_idx, value) {
-    chunk_id = rebuttal_idx + "-" + review_idx;
-    relevant_row = document.getElementById("reviewrow_" + chunk_id)
 
-    if (value == 1) {
-        relevant_row.className = "table-success";
-        window.annotation_map[rebuttal_idx][review_idx] = true;
-
-    } else {
-        relevant_row.className = "table-secondary";
-        window.annotation_map[rebuttal_idx][review_idx] = false;
-
-    }
+function handleClick(rebuttal_idx) {
+    paint(rebuttal_idx)
     document.getElementById("submitBtn").disabled = "true";
 }
 
+
 function updateError(rebuttal_chunk, rebuttal_or_review, add_or_remove) {
-    console.log(rebuttal_or_review)
     if (rebuttal_or_review == "0") {
-            console.log("Adding", rebuttal_chunk, "to rebuttal errors")
         relevant_map = window.error_map["rebuttal_errors"]
     } else {
-            console.log("Adding", rebuttal_chunk, "to review errors")
         relevant_map = window.error_map["review_errors"]
     }
 
@@ -70,10 +50,8 @@ function updateError(rebuttal_chunk, rebuttal_or_review, add_or_remove) {
             return x !== rebuttal_chunk;
         });
         if (rebuttal_or_review == "0") {
-            console.log("Deleting", rebuttal_chunk, "from rebuttal errors")
             window.error_map["rebuttal_errors"] = new_map
         } else {
-            console.log("Deleting", rebuttal_chunk, "from review errors")
             window.error_map["review_errors"] = new_map
 
         }
@@ -81,8 +59,28 @@ function updateError(rebuttal_chunk, rebuttal_or_review, add_or_remove) {
     document.getElementById("submitBtn").disabled = "true";
 }
 
-function cleanAnnotations(){
-  
+
+function buildAnnotationMap(){
+  annotation_map = {}
+
+    var num_rebuttal_chunks = document.getElementsByClassName("tab").length
+    var num_review_chunks = document.getElementById("reviewtablebody_0").childElementCount
+
+    for(var rebuttal_idx of Array(num_rebuttal_chunks).keys()){
+        mapped_review_chunks = Array()
+        for (var review_idx of Array(num_review_chunks).keys()){
+            chunk_id = rebuttal_idx + "-" + review_idx
+            if (document.getElementById("radios-"+ chunk_id + "-Yes").checked){
+                mapped_review_chunks.push(review_idx)
+            } 
+         }
+             if (mapped_review_chunks.length == 0){
+        mapped_review_chunks.push(-1)
+    }
+    annotation_map[rebuttal_idx] = mapped_review_chunks
+    }
+
+  return annotation_map
 }
 
 
@@ -98,16 +96,11 @@ function generateJson(review_length, rebuttal_length) {
             "rebuttal_supernote": document.getElementById("rebuttal_supernote").innerHTML,
             "annotator": document.getElementById('initials').value,
             "comments": document.getElementById('comments').value,
-            "alignments": window.annotation_map,
+            "alignments": buildAnnotationMap(),
             "errors": window.error_map
         }
-        console.log(result)
         document.getElementById("annotation").value = JSON.stringify(result)
         alert("Good to go! Please review then submit")
     }
 
-}
-
-function doSubmit() {
-    alert("Submitted");
 }

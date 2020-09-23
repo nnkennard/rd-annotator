@@ -35,13 +35,17 @@
          <br >
          <form action="/alignments/submitted/" method="post">
             {% csrf_token %}
-    <label for="annotation">Your name: </label>
-    <input id="annotation" type="text" name="annotation" value="yo">
-    <input id="submitBtn" type="submit" value="OK">
-</form>
-
-
-            <br />
+            <div class="row">
+               <div class="col-10">
+                  <input id="annotation" class="form-control input-md" type="text" name="annotation" placeholder="JSON-ified annotation will appear here once validated">
+               </div>
+               <div class="col-2">
+                  <input id="submitBtn" class="btn btn-primary" type="submit" value="Submit">
+               </div>
+            </div>
+             
+         </form>
+         <br />
          </form>
       </div>
    </div>
@@ -65,6 +69,11 @@
                      <tr id="reviewrow_{{ chunk_id }}" class="table-secondary">
                         <th scope="row">{{ forloop.counter0  | add:1 }}</th>
                         <td> {{ review_chunk }} </td>
+
+
+
+
+
                         <td>
                            <input type="radio" id="radios-{{ chunk_id }}-Yes" name="radios-{{ chunk_id }}"
                               onclick="handleClick({{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }}, 1)" value="Yes" checked="false"> Yes
@@ -80,10 +89,25 @@
             <div class="col-4 offset-1">
                <h2>Rebuttal</h2>
                Select which chunk(s) of the review the following chunk of text is responding to. <br /><br />
-               <button id="singlebutton" name="singlebutton" class="btn btn-secondary" onClick="switchTab({{ forloop.counter0 }}, {{rebuttal | length }}, -1)"> &lt; </button>
-               &nbsp; {{ forloop.counter0  | add:1 }} / {{ rebuttal | length}} &nbsp;
-               <button id="singlebutton" name="singlebutton" class="btn btn-secondary" onClick="switchTab({{ forloop.counter0 }}, {{rebuttal | length }}, 1)"> &gt; </button> &nbsp;
-               <button id="singlebutton" name="singlebutton" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Show full rebuttal</button> <br />
+
+
+                        <div class="row">
+               <div class="col-1">
+                  <button id="singlebutton" name="singlebutton" class="btn btn-secondary" onClick="switchTab({{ forloop.counter0 }}, {{rebuttal | length }}, -1)"> &lt; </button>
+               </div>
+               <div class="col-2 offset-1">
+                  {{ forloop.counter0  | add:1 }} / {{ rebuttal | length}}
+               </div>
+               <div class="col-1">
+                  <button id="singlebutton" name="singlebutton" class="btn btn-secondary" onClick="switchTab({{ forloop.counter0 }}, {{rebuttal | length }}, 1)"> &gt; </button>
+               </div>
+               <div class="col-4 offset-3">
+                  <button id="singlebutton" name="singlebutton" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+               Show full rebuttal</button></div>
+            </div>
+
+               
+                <br />
                <br />
                <table class="table">
                   <tbody>
@@ -100,9 +124,9 @@
                   onclick="updateError({{ forloop.counter0 }}, 0, 1)"  value="No" checked="true"> No <br />
                This rebuttal chunk only responds to <b> only a part </b> of one or more review chunk(s) <br />
                <input type="radio" id="reviewradios-{{ forloop.counter0 }}-Yes" name="reviewradios-{{ forloop.counter0 }}"
-                  onclick="registerError({{ forloop.counter0 }}, 1, 0)" value="Yes"> Yes
+                  onclick="updateError({{ forloop.counter0 }}, 1, 0)" value="Yes"> Yes
                <input type="radio" id="reviewradios-{{ forloop.counter0 }}-No" name="reviewradios-{{ forloop.counter0 }}"
-                  onclick="registerError({{ forloop.counter0 }}, 1, 1)" 
+                  onclick="updateError({{ forloop.counter0 }}, 1, 1)" 
                   value="No" checked="true"> No <br />
                <br /> <br />
             </div>
@@ -140,6 +164,8 @@
          </div>
       </div>
    </div>
+   <span id="review_supernote" style="display:none">{{ review_supernote }}</span>
+   <span id="rebuttal_supernote" style="display:none">{{ rebuttal_supernote }}</span>
    <script src="{% static '/index.js' %}"></script>
 </body>
 

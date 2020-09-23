@@ -11,6 +11,8 @@ class AlignmentAnnotation(models.Model):
     label = models.CharField(max_length=30)
     comment = models.CharField(max_length=200)
     annotator = models.CharField(max_length=30)
+    review_chunking_error = models.BooleanField(default=False)
+    rebuttal_chunking_error = models.BooleanField(default=False)
    
 class AnnotatedPair(models.Model):
     class Meta:

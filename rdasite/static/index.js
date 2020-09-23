@@ -76,6 +76,8 @@ function generateJson(review_length, rebuttal_length) {
         submitButton = document.getElementById("submitBtn");
         submitButton.removeAttribute("disabled");
         result = {
+            "review_supernote": document.getElementById("review_supernote").innerHTML,
+            "rebuttal_supernote": document.getElementById("rebuttal_supernote").innerHTML,
             "annotator": document.getElementById('initials').value,
             "comments": document.getElementById('comments').value,
             "alignments": window.annotation_map,

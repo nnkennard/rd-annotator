@@ -11,13 +11,13 @@
          <td> Title </td>
          <td> Already annotated by </td>
       </tr>
-      {% for pair in pair_list %}
+      {% for example in examples %}
       <tr>
-         <td> {{ pair.reviewer }} </td>
-         <td><a href="/alignments/{{ pair.review_supernote }}_{{ pair.rebuttal_supernote }}">
-            {{ pair.title }}</a>
+         <td> {{ example.reviewer }} </td>
+         <td><a href="/alignments/{{ example.review_supernote }}_{{ example.rebuttal_supernote }}">
+            {{ example.title }}</a>
          </td>
-         <td> </td>
+         <td> {{ example.previous_annotators }} </td>
       </tr>
       </li>
       {% endfor %}

@@ -9,14 +9,14 @@ class AlignmentAnnotation(models.Model):
     rebuttal_supernote = models.CharField(max_length=30)
     rebuttal_chunk = models.IntegerField()
     label = models.CharField(max_length=30)
-    comment = models.CharField(max_length=50)
+    comment = models.CharField(max_length=200)
+    annotator = models.CharField(max_length=30)
    
 class AnnotatedPair(models.Model):
     class Meta:
         app_label = "alignments"
     review_supernote = models.CharField(max_length=30)
     rebuttal_supernote = models.CharField(max_length=30)
-    annotator = models.CharField(max_length=30)
     status = models.IntegerField()
     title = models.CharField(max_length=300)
     reviewer = models.CharField(max_length=30)

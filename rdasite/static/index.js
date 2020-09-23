@@ -22,7 +22,6 @@ function switchTab(current_tab, total_tabs, direction) {
         tabs.item(current_tab).style.display = "none";
     }
     tabs.item(new_tab).style.display = "block";
-    document.getElementById("submitBtn").disabled = "true";
 }
 
 function handleClick(rebuttal_idx, review_idx, value) {
@@ -38,6 +37,7 @@ function handleClick(rebuttal_idx, review_idx, value) {
         window.annotation_map[rebuttal_idx][review_idx] = false;
 
     }
+    document.getElementById("submitBtn").disabled = "true";
 }
 
 function updateError(rebuttal_chunk, rebuttal_or_review, add_or_remove) {
@@ -65,6 +65,7 @@ function updateError(rebuttal_chunk, rebuttal_or_review, add_or_remove) {
 
         }
     }
+    document.getElementById("submitBtn").disabled = "true";
 }
 
 function generateJson(review_length, rebuttal_length) {
@@ -80,7 +81,8 @@ function generateJson(review_length, rebuttal_length) {
             "alignments": window.annotation_map,
             "errors": window.error_map
         }
-        document.getElementById("jsonBox").innerHTML = JSON.stringify(result)
+        console.log(result)
+        document.getElementById("annotation").value = JSON.stringify(result)
         alert("Good to go! Please review then submit")
     }
 

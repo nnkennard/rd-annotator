@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.template import loader
 
 from .models import AlignmentAnnotation, AnnotatedPair, Text
+from .forms import AnnotationForm
 
 def index(request):
     pair_list = AnnotatedPair.objects.all()
@@ -38,7 +39,8 @@ def detail(request, review_supernote, rebuttal_supernote):
             review_supernote=review_supernote,
             rebuttal_supernote=rebuttal_supernote
             ).title
-    context = {"paper_title":title,
+    context = {
+            "paper_title":title,
             "review": review_text,
             "rebuttal": rebuttal_text}
     template = loader.get_template('alignments/detail.html')
@@ -46,6 +48,8 @@ def detail(request, review_supernote, rebuttal_supernote):
 
 def submitted(request):
     template = loader.get_template('alignments/submitted.html')
-    #print(request.POST.keys())
+    form = AnnotationForm(request.POST)
+    print(form.is_valid())
+    print(form.cleaned_data)
     context = {}
     return HttpResponse(template.render(context, request))
